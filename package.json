@@ -6,7 +6,7 @@
       "start":"node app.js"
   }
   , "dependencies": {
-      "express": "~3.4.x"
+      "express": "2.5.10"
     , "jade": ">= 0.0.1"
   }
   , "engines": {
