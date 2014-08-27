@@ -1,9 +1,15 @@
 {
-    "name": "application-name"
-  , "version": "0.0.1"
+    "name": "nehes"
+  , "version": "0.0.2"
   , "main": "app.js"
+  , "scripts": {
+      "start":"node index.js"
+  }
   , "dependencies": {
-      "express": "2.5.10"
+      "express": "~3.4.x"
     , "jade": ">= 0.0.1"
+  }
+  , "engines": {
+    "node":"0.10.x"
   }
 }
