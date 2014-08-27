@@ -3,25 +3,24 @@
  * Module dependencies.
  */
 
-var express = require('express'),
-  routes = require('./routes'),
-  api = require('./routes/api');
+var express = require('express');
+var routes = require('./routes');
+var http = require('http');
+var path = require('path');
+var api = require('./routes/api');
 
-var app = module.exports = express.createServer();
+
+var app = express();
 
 // Configuration
-
-app.configure(function(){
-  app.set('views', __dirname + '/views');
+    app.set('port', process.env.PORT || 3000);
+  app.set('views', path.join(__dirname, '/views'));
   app.set('view engine', 'jade');
-  app.set('view options', {
-    layout: false
-  });
+  app.use(express.json());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(path.join(__dirname, '/public')));
   app.use(app.router);
-});
 
 
 app.configure('development', function(){
@@ -51,6 +50,6 @@ app.get('*', routes.index);
 
 // Start server
 
-app.listen(3000, function(){
+http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
