@@ -1,55 +1,66 @@
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 
-var express = require('express');
-var routes = require('./routes');
-var http = require('http');
-var path = require('path');
-var api = require('./routes/api');
+var express = require('express'),
+  bodyParser = require('body-parser'),
+  methodOverride = require('method-override'),
+  errorHandler = require('error-handler'),
+  morgan = require('morgan'),
+  routes = require('./routes'),
+  api = require('./routes/api'),
+  http = require('http'),
+  path = require('path');
+
+var app = module.exports = express();
 
 
-var app = express();
+/**
+ * Configuration
+ */
 
-// Configuration
-    app.set('port', process.env.PORT || 3000);
-  app.set('views', path.join(__dirname, '/views'));
-  app.set('view engine', 'jade');
-  app.use(express.json());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.static(path.join(__dirname, '/public')));
-  app.use(app.router);
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(morgan('dev'));
+app.use(bodyParser());
+app.use(methodOverride());
+app.use(express.static(path.join(__dirname, 'public')));
 
+var env = process.env.NODE_ENV || 'development';
 
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
+// development only
+if (env === 'development') {
   app.use(express.errorHandler());
-});
+}
 
-// Routes
+// production only
+if (env === 'production') {
+  // TODO
+}
 
+
+/**
+ * Routes
+ */
+
+// serve index and view partials
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
 // JSON API
-
-app.get('/api/posts', api.posts);
-
-app.get('/api/post/:id', api.post);
-app.post('/api/post', api.addPost);
-app.put('/api/post/:id', api.editPost);
-app.delete('/api/post/:id', api.deletePost);
+app.get('/api/name', api.name);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
 
-// Start server
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+/**
+ * Start Server
+ */
+
+http.createServer(app).listen(app.get('port'), function () {
+  console.log('Express server listening on port ' + app.get('port'));
 });
